@@ -1,6 +1,7 @@
 Synology IPCAM
 ==============
 
+[![Build Status](https://travis-ci.org/NicolaiSoeborg/SynologyIPCAM.svg?branch=master)](https://travis-ci.org/NicolaiSoeborg/SynologyIPCAM)
 [![GitHub issues](https://img.shields.io/github/issues/NicolaiSoeborg/SynologyIPCAM.svg)](https://github.com/NicolaiSoeborg/SynologyIPCAM/issues)
 [![Beerpay](https://beerpay.io/NicolaiSoeborg/SynologyIPCAM/badge.svg?style=flat)](https://beerpay.io/NicolaiSoeborg/SynologyIPCAM)
 [![license](https://img.shields.io/badge/License-Beerware-blue.svg)](https://github.com/NicolaiSoeborg/SynologyIPCAM/blob/master/LICENSE)
