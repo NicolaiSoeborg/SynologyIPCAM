@@ -4,7 +4,7 @@
 user = 'USERNAME'
 password = 'PASSWORD'
 base_url = 'http://192.168.1.XXX:5000/webapi/'
-MAX_ATTEMPTS = 3 # The api call sometimes fails for unknown reasons
+MAX_ATTEMPTS = 5 # The api call sometimes fails for unknown reasons
 ##############################
 
 import sys, datetime
@@ -14,32 +14,31 @@ import urllib.parse
 import json
 
 def log(txt, die = False):
-    t = datetime.datetime.now().strftime("%Y/%b/%d %H:%M:%S")
-    print("[%s] %s" % (t,txt))
-    if die: sys.exit()
+	t = datetime.datetime.now().strftime("%Y/%b/%d %H:%M:%S")
+	print("[%s] %s" % (t,txt))
+	if die: sys.exit()
 
 def call_syno_api(path, values, attempt = 0):
-    global MAX_ATTEMPTS
-    param = urllib.parse.urlencode(values)
-    with urllib.request.urlopen(base_url + path + '?' + param) as response:
-        r = response.read().decode('utf-8')
-        j = json.loads(r)
-        if not ('success' in j and j['success']):
-            if attempt < MAX_ATTEMPTS:
-                log("Warning: GET: %s PARAM: %s\nResponse: %s.\nRetrying in 3 sec." % (path,values,r))
-                sleep(3)
-                return call_syno_api(path, values, attempt+1)
-            log("Error: Could not complete request!", die = True)
-        #log("From %s\nGot: %s" % (values,j))
-        return j
+	param = urllib.parse.urlencode(values)
+	with urllib.request.urlopen(base_url + path + '?' + param) as response:
+		r = response.read().decode('utf-8')
+		j = json.loads(r)
+		if not ('success' in j and j['success']):
+			if attempt < MAX_ATTEMPTS:
+				log("Warning: GET: %s PARAM: %s\nResponse: %s.\nRetrying in 3 sec." % (path,values,r))
+				sleep(3)
+				return call_syno_api(path, values, attempt+1)
+			log("Error: Could not complete request!", die = True)
+		#log("From %s\nGot: %s" % (values,j))
+		return j
 
 try:
-    argument = int(str(sys.argv[1]))
+	argument = int(str(sys.argv[1]))
 except ValueError:
-    log("Error: Please enter a eventId.", die = True)
+	log("Error: Please enter a eventId.", die = True)
 
 if argument < 1 or argument > 10:
-    log("Error: eventId has to be in range [1, 10].", die = True)
+	log("Error: eventId has to be in range [1, 10].", die = True)
 
 
 # Init
