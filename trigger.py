@@ -40,44 +40,57 @@ except ValueError:
 if argument < 1 or argument > 10:
 	log("Error: eventId has to be in range [1, 10].", die = True)
 
-
 # Init
-values = {'api' : 'SYNO.API.Info',
-          'method' : 'Query',
+values = {'api'     : 'SYNO.API.Info',
+          'method'  : 'Query',
           'version' : '1',
-          'query' : 'ALL'}
+          'query'   : 'ALL'}
 info = call_syno_api("query.cgi", values)
 log("Init done.")
 
-# Login
-path = info['data']['SYNO.API.Auth']['path']
-values = {'api' : 'SYNO.API.Auth',
-          'method' : 'Login',
-          'version' : '2',
-          'account' : user,
-          'passwd' : password,
-          'session' : 'SurveillanceStation',
-          'format' : 'cookie'}
-ret = call_syno_api(path, values)
-sid = ret['data']['sid']
-log("Login done.")
-
 # Trigger
 path = info['data']['SYNO.SurveillanceStation.ExternalEvent']['path']
-values = {'api' : 'SYNO.SurveillanceStation.ExternalEvent',
-          'method' : 'Trigger',
+values = {'api'     : 'SYNO.SurveillanceStation.ExternalEvent',
+          'method'  : 'Trigger',
           'version' : '1',
           'eventId' : argument,
-          '_sid' : sid}
+          'account' : user,
+	  'password': password}
 ret = call_syno_api(path, values)
-log("Trigger done.")
+log("Done sending .")
+
+# The logic below works, but results in more http requests
+# For some reasons the Synology API seems to fail at random, so fewer http request is preferred.
+
+# Login
+#path = info['data']['SYNO.API.Auth']['path']
+#values = {'api' : 'SYNO.API.Auth',
+#          'method' : 'Login',
+#          'version' : '2',
+#          'account' : user,
+#          'passwd' : password,
+#          'session' : 'SurveillanceStation',
+#          'format' : 'cookie'}
+#ret = call_syno_api(path, values)
+#sid = ret['data']['sid']
+#log("Login done.")
+
+# Trigger
+#path = info['data']['SYNO.SurveillanceStation.ExternalEvent']['path']
+#values = {'api' : 'SYNO.SurveillanceStation.ExternalEvent',
+#          'method' : 'Trigger',
+#          'version' : '1',
+#          'eventId' : argument,
+#          '_sid' : sid}
+#ret = call_syno_api(path, values)
+#log("Trigger done.")
 
 # Logout
-path = info['data']['SYNO.API.Auth']['path']
-values = {'api' : 'SYNO.API.Auth',
-          'method' : 'Logout',
-          'version' : '2',
-          'session' : 'SurveillanceStation',
-          '_sid' : sid}
-ret = call_syno_api(path, values)
-log("Logout done.\nDone sending EventId=%s: %s" % (argument,ret))
+#path = info['data']['SYNO.API.Auth']['path']
+#values = {'api' : 'SYNO.API.Auth',
+#          'method' : 'Logout',
+#          'version' : '2',
+#          'session' : 'SurveillanceStation',
+#          '_sid' : sid}
+#ret = call_syno_api(path, values)
+#log("Logout done.\nDone sending EventId=%s: %s" % (argument,ret))
